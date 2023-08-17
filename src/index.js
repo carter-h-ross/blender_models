@@ -76,7 +76,8 @@ const models = [
       ],
       "radius": 60, 
       "height": 25,
-      "offset": 15,
+      "offsetZ": 15,
+      "offsetY": 0,
     },
     { // 
       "path": "chess-boards/lava-chess.gltf", 
@@ -88,7 +89,8 @@ const models = [
       ],
       "radius": 60, 
       "height": 25,
-      "offset": 15,
+      "offsetZ": 15,
+      "offsetY": 0,
     },
     {
       "path": "chess-boards/double-board.gltf", 
@@ -100,7 +102,132 @@ const models = [
       ],
       "radius": 120, 
       "height": 50,
-      "offset": 30,
+      "offsetZ": 30,
+      "offsetY": 0,
+    },
+  ],
+  [
+    {
+      "path": "pieces/white-queen.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 10, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -5,
+    },
+    {
+      "path": "pieces/white-king.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 10, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -5.3,
+    },
+    {
+      "path": "pieces/white-knight.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 8, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
+    },
+    {
+      "path": "pieces/white-bishop.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 9, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4.5,
+    },
+    {
+      "path": "pieces/white-rook.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 8, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
+    },
+    {
+      "path": "pieces/white-pawn.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 7, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
+    },
+  ],
+  [
+    {
+      "path": "pieces/black-queen.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 10, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -5,
+    },
+    {
+      "path": "pieces/black-king.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 10, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -5.3,
+    },
+    {
+      "path": "pieces/black-knight.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 8, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
+    },
+    {
+      "path": "pieces/black-bishop.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 9, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4.5,
+    },
+    {
+      "path": "pieces/black-rook.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 8, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
+    },
+    {
+      "path": "pieces/black-pawn.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 10, "y": 10, "z": 10},
+      ],
+      "radius": 7, 
+      "height": 5,
+      "offsetZ": 2,
+      "offsetY": -4,
     },
   ],
 ]
@@ -150,8 +277,9 @@ function switchModel(r,c) {
     }
     radius = models[r][c]["radius"];
     height = models[r][c]["height"];
-    offset = models[r][c]["offset"];
-    currentModel.position.set(offset,0,0);
+    offsetZ = models[r][c]["offsetZ"];
+    offsetY = models[r][c]["offsetY"];
+    currentModel.position.set(offsetZ,offsetY,0);
     pageLoaded = true;
     isLoading = false;
   }, undefined, function(error) {
@@ -176,7 +304,7 @@ let backgrounds = {
   "space clouds": "space_clouds.jpg", 
   "mountain": "mountain.jpg",
   "falling lights": "falling_lights.jpg",
-  "white": "white_background.jpeg",
+  "black": "white_background.jpeg",
   "night sky": "night_sky.jpg",
   "nebula": "nebula.jpg",
   "future_abstract": "future_abstract.jpg",
@@ -209,6 +337,24 @@ window.addEventListener('keydown', function(event) {
       }
       switchModel(navR,navC);
       break;
+    case 'ArrowUp':
+      if (navR == 0) {
+        navR = models.length - 1;
+      } else {
+        navR--;
+      }
+      navC = 0;
+      switchModel(navR,navC);
+      break;
+    case 'ArrowDown':
+      if (navR == models.length - 1) {
+        navR = 0;
+      } else {
+        navR++;
+      }
+      navC = 0;
+      switchModel(navR,navC);
+      break;
     case 'w':
       currentBackgroundIndex++;
       if (currentBackgroundIndex >= keys.length) {
@@ -225,6 +371,20 @@ window.addEventListener('keydown', function(event) {
   let newBackgroundTexture = new THREE.TextureLoader().load(`backgrounds/${backgrounds[keys[currentBackgroundIndex]]}`);
   scene.background = newBackgroundTexture;
 });
+
+// downloading models
+document.querySelector('.download-model-button').addEventListener('click', downloadModel);
+
+function downloadModel() {
+  const modelPath = `models/${models[navR][navC]["path"]}`;
+  const a = document.createElement('a');
+  a.href = modelPath;
+  const modelName = modelPath.split('/').pop();
+  a.download = modelName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 
 // directional light
 var pointLights = [];
@@ -246,7 +406,8 @@ let spin = false;
 let height = 0;
 let angle = 0;
 let radius = 0;
-let offset = 0;
+let offsetZ = 0;
+let offsetY = 0;
 function stopSpin() {
   spin = false;
 }
