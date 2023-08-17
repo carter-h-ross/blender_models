@@ -64,11 +64,105 @@ function onCanvasClick(event) {
 }
 */
 
-// ambient scene light
-/*
+const models = [
+  [ // chess boards
+    { // standard board
+      "path": "chess-boards/standard-board.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 30, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": -30, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 0, "y": 25, "z": 30},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 0, "y": 25, "z": -30},
+      ],
+      "radius": 60, 
+      "height": 25,
+      "offset": 15,
+    },
+    { // 
+      "path": "chess-boards/lava-chess.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 30, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": -30, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 0, "y": 25, "z": 30},
+        {"color": 0xffffff, "intesity": 3, "distance": 80, "x": 0, "y": 25, "z": -30},
+      ],
+      "radius": 60, 
+      "height": 25,
+      "offset": 15,
+    },
+    {
+      "path": "chess-boards/double-board.gltf", 
+      "lights": [
+        {"color": 0xffffff, "intesity": 3, "distance": 160, "x": 60, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 160, "x": -60, "y": 25, "z": 0},
+        {"color": 0xffffff, "intesity": 3, "distance": 160, "x": 0, "y": 25, "z": 60},
+        {"color": 0xffffff, "intesity": 3, "distance": 160, "x": 0, "y": 25, "z": -60},
+      ],
+      "radius": 120, 
+      "height": 50,
+      "offset": 30,
+    },
+  ],
+]
+
+const fullWidth = window.innerWidth;
+const fullHeight = window.innerHeight;
+const viewWidth = window.innerWidth;
+const viewHeight = window.innerHeight;
+var navR = 0;
+var navC = 0;
+var isLoading = false;
+var pageLoaded = false;
+var lights = [];
+var currentModel;
+function switchModel(r,c) {
+  if(isLoading) return;
+  isLoading = true;
+
+  // Remove previous lights from the scene and empty the array
+  for (let light of lights) {
+    scene.remove(light);
+  }
+  lights = [];
+
+  // Remove the current model
+  if (currentModel) {
+    scene.remove(currentModel);
+    currentModel.traverse(function(child) {
+      if (child.isMesh) {
+        child.geometry.dispose();
+        child.material.dispose();
+      }
+    });
+  }
+
+  gltfLoader.load(`models/${models[r][c]["path"]}`, function(gltf) {
+    console.log("loading gltf model")
+    // adding the model to the scene
+    currentModel = gltf.scene;
+    scene.add(currentModel);
+    // adding lights to scene
+    for (let lightData of models[r][c]["lights"]) {
+      const light = new THREE.PointLight(lightData["color"], lightData["intensity"], lightData["distance"]);
+      light.position.set(lightData["x"], lightData["y"], lightData["z"]);
+      lights.push(light);
+      scene.add(light);
+    }
+    radius = models[r][c]["radius"];
+    height = models[r][c]["height"];
+    offset = models[r][c]["offset"];
+    currentModel.position.set(offset,0,0);
+    pageLoaded = true;
+    isLoading = false;
+  }, undefined, function(error) {
+      console.error(error);
+  });
+}
+
+switchModel(0,0);
+
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(ambientLight);
-*/
 
 function rgbToHex(r, g, b) {
   var redHex = r.toString(16).padStart(2, '0');
@@ -93,28 +187,42 @@ let backgrounds = {
 let keys = Object.keys(backgrounds);
 let currentBackgroundIndex = 9;
 
-/* Set the initial background
-let background_texture = new THREE.TextureLoader().load(backgrounds[keys[currentBackgroundIndex]]);
+let background_texture = new THREE.TextureLoader().load(`backgrounds/${backgrounds[keys[currentBackgroundIndex]]}`);
 scene.background = background_texture;
-*/
 
 // Listen to keydown event
 window.addEventListener('keydown', function(event) {
   switch (event.key) {
-    case 'ArrowUp':
+    case 'ArrowRight':
+      if (navC == models[navR].length - 1) {
+        navC = 0;
+      } else {
+        navC++;
+      }
+      switchModel(navR,navC);
+      break;
+    case 'ArrowLeft':
+      if (navC == 0) {
+        navC = models[navR].length - 1;
+      } else {
+        navC--;
+      }
+      switchModel(navR,navC);
+      break;
+    case 'w':
       currentBackgroundIndex++;
       if (currentBackgroundIndex >= keys.length) {
         currentBackgroundIndex = 0;
       }
       break;
-    case 'ArrowDown':
+    case 's':
       currentBackgroundIndex--;
       if (currentBackgroundIndex < 0) {
         currentBackgroundIndex = keys.length - 1;
       }
       break;
   }
-  let newBackgroundTexture = new THREE.TextureLoader().load(backgrounds[keys[currentBackgroundIndex]]);
+  let newBackgroundTexture = new THREE.TextureLoader().load(`backgrounds/${backgrounds[keys[currentBackgroundIndex]]}`);
   scene.background = newBackgroundTexture;
 });
 
@@ -135,25 +243,23 @@ function clearPointLights() {
 
 // main loop
 let spin = false;
+let height = 0;
 let angle = 0;
-let radius = 40;
+let radius = 0;
+let offset = 0;
 function stopSpin() {
   spin = false;
 }
 function startSpin() {
   spin = true;
-  camera.position.x = 0;
-  camera.position.z = 0;
-  camera.position.y = 7;
 }
 startSpin();
 function animate() {
   
-  if (spin) {
-
-    angle += 0.003;
-    camera.lookAt(new THREE.Vector3(radius * Math.sin(angle), 10, radius * Math.cos(angle)));
-
+  if (spin && pageLoaded) {
+    camera.position.set(0 , height, radius);
+    camera.lookAt(0,0,0)
+    currentModel.rotation.y += 0.003;
   }
   renderer.render(scene, camera);
 }

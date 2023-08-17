@@ -33,6 +33,15 @@
         <div class="animation start-home"></div>
     </nav>
 
+    <div class="main-menu home-menu">
+
+        <button class="main-menu-button signup-button">download model</button>
+        <p>U and D to switch background</p>
+        <p>⬆ ⬇ to switch category</p>
+        <p>⬅ ➡ to switch 3d model</p>
+
+    </div>
+
     <style>
         canvas {
             position: fixed;
@@ -41,6 +50,67 @@
             z-index: -1;
         }
 
+        .main-menu-button {
+            box-shadow:inset 0px 1px 0px 0px #dcecfb;
+            background:linear-gradient(to bottom, #bddbfa 5%, #80b5ea 100%);
+            background-color:#bddbfa;
+            border-radius:6px;
+            border:1px solid #84bbf3;
+            display:inline-block;
+            cursor:pointer;
+            color:#ffffff;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            padding:7px 32px;
+            text-decoration:none;
+            text-shadow:0px 1px 0px #528ecc;
+            margin-top: 10px;
+        }
+        .main-menu-button:hover {
+            background:linear-gradient(to bottom, #80b5ea 5%, #bddbfa 100%);
+            background-color:#80b5ea;
+        }
+        .main-menu-button:active {
+            position:relative;
+            top:1px;
+        }
+        .main-menu {
+            position: fixed;
+            top: 20%;
+            bottom: 12%;
+            left: 3%;
+            width: 200px;
+            height: 65%;
+            /* From https://css.glass */
+
+            /*background: rgba(147, 154, 208, 0.57);*/
+            background: rgba(255, 255, 255, 0.57);
+            
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12.1px);
+            -webkit-backdrop-filter: blur(12.1px);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-menu-input { 
+            font-size:16px; 
+            border-style:inset; 
+            border-color:#a8a8a8; 
+            text-align:left; 
+            border-width:1px; 
+            border-radius:8px; 
+            box-shadow: 2px 4px 12px 0px rgba(0,0,0,.72); 
+            text-shadow:0px 0px 0px rgba(42,42,42,.75); 
+            font-weight:normal; font-family:sans-serif; 
+            padding:6px;  
+            margin-bottom: 10px;
+        }
         .download-button {
             display: inline-block;
             font-family: arial;
